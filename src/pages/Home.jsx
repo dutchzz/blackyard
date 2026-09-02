@@ -20,8 +20,8 @@ export default function Home() {
 
   return (
     <>
-      <LegalBanner />
       <Header />
+      <LegalBanner />
       <Hero />
 
       {loading ? (
