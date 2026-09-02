@@ -18,6 +18,7 @@ export default function SettingsEditor() {
       cashtag: config.cashtag ?? '',
       contactEmail: config.contactEmail ?? '',
       paymentInstructions: config.paymentInstructions ?? '',
+      legalWarning: config.legalWarning ?? '',
       legalText: config.legalText ?? '',
       footerText: config.footerText ?? '',
       adminPasscode: config.adminPasscode ?? '',
@@ -109,6 +110,11 @@ export default function SettingsEditor() {
 
       <div className="card">
         <h3>Legal &amp; footer</h3>
+        <div className="field">
+          <label>Top-of-page legal warning</label>
+          <textarea value={form.legalWarning} onChange={set('legalWarning')} style={{ minHeight: 70 }} />
+          <span className="hint">Shown in the thin bar at the very top of the site. Leave blank to hide it.</span>
+        </div>
         <div className="field">
           <label>Legal / disclaimer text</label>
           <textarea value={form.legalText} onChange={set('legalText')} style={{ minHeight: 110 }} />

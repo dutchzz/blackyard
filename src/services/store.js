@@ -40,6 +40,8 @@ export const DEFAULT_CONFIG = {
     mutedColor: '#9aa0a6',
     borderColor: '#2a2a2a',
   },
+  legalWarning:
+    'LEGAL NOTICE: All files are for lawful use only. By browsing or downloading you confirm you are 18 or older and that possessing, printing, and using these files is legal in your jurisdiction. You are responsible for complying with all applicable local, state, and federal laws.',
   legalText:
     'All files are for legal use only. By downloading you confirm that you are 18 or older and that possessing, printing, and using these files is lawful in your jurisdiction. You are solely responsible for compliance with all applicable local, state, and federal laws.',
   footerText: '© 2026 BLACKYARD. All rights reserved.',
@@ -194,7 +196,9 @@ const local = {
 const fb = {
   getSiteConfig: async () => {
     const snap = await getDoc(doc(db, 'config', 'site'))
-    return snap.exists() ? snap.data() : DEFAULT_CONFIG
+    // Merge defaults so newly added fields (e.g. legalWarning) appear
+    // even if the stored config predates them.
+    return snap.exists() ? { ...DEFAULT_CONFIG, ...snap.data() } : DEFAULT_CONFIG
   },
   saveSiteConfig: async (config) => {
     await setDoc(doc(db, 'config', 'site'), config)

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useStore } from '../context/StoreContext'
 import Header from '../components/Header'
+import LegalBanner from '../components/LegalBanner'
 import Hero from '../components/Hero'
 import Footer from '../components/Footer'
 import ProductGrid from '../components/ProductGrid'
@@ -19,6 +20,7 @@ export default function Home() {
 
   return (
     <>
+      <LegalBanner />
       <Header />
       <Hero />
 
