@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Products are public (readable by everyone).
+    // NOTE: writes are open so the passcode-gated admin page can save.
+    // For real protection, upgrade the admin to Firebase Auth and
+    // change these write rules to require an authenticated owner.
+    match /products/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /config/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /codes/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}
