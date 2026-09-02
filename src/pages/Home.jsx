@@ -32,9 +32,7 @@ export default function Home() {
               <div className="section-head">
                 <div>
                   <h2>The files</h2>
-                  <p className="section-sub">
-                    {config?.storeName} catalog — free files and paid files under $10.
-                  </p>
+                  <p className="section-sub">Curated STL files — most are free.</p>
                 </div>
               </div>
               <ProductGrid onSelect={setViewing} />
