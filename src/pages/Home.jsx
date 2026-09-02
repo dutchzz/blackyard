@@ -14,6 +14,7 @@ export default function Home() {
   const [buying, setBuying] = useState(null)
 
   const cashtag = config?.cashtag || '$CashApp'
+  const cashLink = `https://cash.app/${cashtag.replace(/^\$/, '')}`
   const howToPay = (config?.paymentInstructions || '').replaceAll('{cashtag}', cashtag)
 
   return (
@@ -55,6 +56,15 @@ export default function Home() {
                 <p className="legal" style={{ marginTop: 16 }}>
                   <strong>Payment:</strong> CashApp only · {cashtag}
                 </p>
+                <a
+                  className="btn btn-primary btn-block"
+                  style={{ marginTop: 16 }}
+                  href={cashLink}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Pay with CashApp
+                </a>
               </div>
             </div>
           </section>
