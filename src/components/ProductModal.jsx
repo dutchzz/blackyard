@@ -1,14 +1,19 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useStore } from '../context/StoreContext'
 import { parseProductImages, toDownloadUrl } from '../utils/images'
+import { addSubscriber } from '../services/store'
 
 export default function ProductModal({ product, onClose, onBuy }) {
   const { config } = useStore()
   const [idx, setIdx] = useState(0)
+  const [gate, setGate] = useState({ show: false, email: '', busy: false, done: false, error: '' })
 
   const images = useMemo(() => parseProductImages(product), [product])
 
-  useEffect(() => setIdx(0), [product.id])
+  useEffect(() => {
+    setIdx(0)
+    setGate({ show: false, email: '', busy: false, done: false, error: '' })
+  }, [product.id])
 
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && onClose()
@@ -22,6 +27,23 @@ export default function ProductModal({ product, onClose, onBuy }) {
 
   const isFree = !product.price || Number(product.price) === 0
   const current = images[Math.min(idx, Math.max(images.length - 1, 0))]
+  const emailUnlocked = gate.done || localStorage.getItem('by_email_ok') === '1'
+
+  const handleEmailSubmit = async (e) => {
+    e.preventDefault()
+    setGate((g) => ({ ...g, busy: true, error: '' }))
+    try {
+      const res = await addSubscriber(gate.email)
+      if (res.ok || res.error === 'Already subscribed.') {
+        localStorage.setItem('by_email_ok', '1')
+        setGate((g) => ({ ...g, busy: false, done: true }))
+      } else {
+        setGate((g) => ({ ...g, busy: false, error: res.error }))
+      }
+    } catch {
+      setGate((g) => ({ ...g, busy: false, error: 'Something went wrong. Please try again.' }))
+    }
+  }
 
   const prev = (e) => {
     e.stopPropagation()
@@ -109,14 +131,42 @@ export default function ProductModal({ product, onClose, onBuy }) {
               </span>
             ) : isFree ? (
               product.stlUrl ? (
-                <a
-                  className="btn btn-primary btn-block"
-                  href={toDownloadUrl(product.stlUrl)}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  Download free
-                </a>
+                emailUnlocked ? (
+                  <a
+                    className="btn btn-primary btn-block"
+                    href={toDownloadUrl(product.stlUrl)}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Download free
+                  </a>
+                ) : !gate.show ? (
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-block"
+                    onClick={() => setGate((g) => ({ ...g, show: true }))}
+                  >
+                    Download free
+                  </button>
+                ) : (
+                  <form className="unlock" onSubmit={handleEmailSubmit} style={{ marginTop: 0 }}>
+                    <p className="section-sub" style={{ textAlign: 'center', marginBottom: 10 }}>
+                      Enter your email to unlock this free file.
+                    </p>
+                    <input
+                      type="email"
+                      value={gate.email}
+                      onChange={(e) => setGate((g) => ({ ...g, email: e.target.value, error: '' }))}
+                      placeholder="you@example.com"
+                      autoComplete="email"
+                      required
+                    />
+                    <button type="submit" className="btn btn-primary btn-block" disabled={gate.busy}>
+                      {gate.busy ? 'One sec…' : 'Get my download'}
+                    </button>
+                    {gate.error && <p className="error-msg">{gate.error}</p>}
+                  </form>
+                )
               ) : (
                 <span className="btn btn-ghost btn-block" aria-disabled>
                   File coming soon
