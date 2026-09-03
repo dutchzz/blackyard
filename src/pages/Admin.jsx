@@ -5,11 +5,13 @@ import LoginGate from '../components/admin/LoginGate'
 import ProductEditor from '../components/admin/ProductEditor'
 import SettingsEditor from '../components/admin/SettingsEditor'
 import CodesManager from '../components/admin/CodesManager'
+import SubscribersManager from '../components/admin/SubscribersManager'
 
 const TABS = [
   { id: 'products', label: 'Products' },
   { id: 'settings', label: 'Site settings' },
   { id: 'codes', label: 'Unlock codes' },
+  { id: 'subscribers', label: 'Subscribers' },
 ]
 
 function AdminShell() {
@@ -107,6 +109,7 @@ function AdminShell() {
           {tab === 'products' && <ProductEditor />}
           {tab === 'settings' && <SettingsEditor />}
           {tab === 'codes' && <CodesManager />}
+          {tab === 'subscribers' && <SubscribersManager />}
         </main>
       </div>
     </div>

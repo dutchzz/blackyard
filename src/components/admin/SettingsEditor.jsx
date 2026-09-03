@@ -5,6 +5,7 @@ import { DEFAULT_CONFIG } from '../../services/store'
 export default function SettingsEditor() {
   const { config, updateConfig } = useStore()
   const [form, setForm] = useState(null)
+  const [faqText, setFaqText] = useState('')
   const [saving, setSaving] = useState(false)
   const [savedMsg, setSavedMsg] = useState('')
 
@@ -18,6 +19,12 @@ export default function SettingsEditor() {
       cashtag: config.cashtag ?? '',
       contactEmail: config.contactEmail ?? '',
       paymentInstructions: config.paymentInstructions ?? '',
+      fulfillmentNote: config.fulfillmentNote ?? '',
+      updatesBlurb: config.updatesBlurb ?? '',
+      aboutTitle: config.aboutTitle ?? '',
+      aboutText: config.aboutText ?? '',
+      licenseText: config.licenseText ?? '',
+      restrictionNote: config.restrictionNote ?? '',
       legalWarning: config.legalWarning ?? '',
       legalText: config.legalText ?? '',
       footerText: config.footerText ?? '',
@@ -25,6 +32,11 @@ export default function SettingsEditor() {
       adminPasscode: config.adminPasscode ?? '',
       theme: { ...DEFAULT_CONFIG.theme, ...(config.theme || {}) },
     })
+    setFaqText(
+      (Array.isArray(config.faq) ? config.faq : [])
+        .map((f) => `${f.q} | ${f.a}`)
+        .join('\n'),
+    )
     return null
   }
 
@@ -37,7 +49,14 @@ export default function SettingsEditor() {
   const submit = async (e) => {
     e.preventDefault()
     setSaving(true)
-    await updateConfig(form)
+    const faq = faqText
+      .split('\n')
+      .map((line) => {
+        const [q, ...rest] = line.split('|')
+        return { q: (q || '').trim(), a: rest.join('|').trim() }
+      })
+      .filter((f) => f.q && f.a)
+    await updateConfig({ ...form, faq })
     setSaving(false)
     setSavedMsg('Settings saved. Changes are live.')
     setTimeout(() => setSavedMsg(''), 3000)
@@ -86,6 +105,44 @@ export default function SettingsEditor() {
         <div className="field">
           <label>Payment instructions (one step per line, use {'{cashtag}'} for your tag)</label>
           <textarea value={form.paymentInstructions} onChange={set('paymentInstructions')} style={{ minHeight: 130 }} />
+        </div>
+        <div className="field">
+          <label>Fulfillment note (what buyers should expect after paying)</label>
+          <textarea value={form.fulfillmentNote} onChange={set('fulfillmentNote')} style={{ minHeight: 60 }} />
+        </div>
+      </div>
+
+      <div className="card">
+        <h3>About &amp; updates</h3>
+        <div className="field">
+          <label>About heading</label>
+          <input value={form.aboutTitle} onChange={set('aboutTitle')} />
+        </div>
+        <div className="field">
+          <label>About text</label>
+          <textarea value={form.aboutText} onChange={set('aboutText')} style={{ minHeight: 90 }} />
+        </div>
+        <div className="field">
+          <label>Updates blurb (email capture section)</label>
+          <textarea value={form.updatesBlurb} onChange={set('updatesBlurb')} style={{ minHeight: 60 }} />
+        </div>
+        <div className="field">
+          <label>FAQ — one per line as {"Question | Answer"}</label>
+          <textarea value={faqText} onChange={(e) => setFaqText(e.target.value)} style={{ minHeight: 150 }} />
+          <span className="hint">Example: Are the files free? | Yes, most are free to download.</span>
+        </div>
+      </div>
+
+      <div className="card">
+        <h3>License &amp; restrictions</h3>
+        <div className="field">
+          <label>License / use terms</label>
+          <textarea value={form.licenseText} onChange={set('licenseText')} style={{ minHeight: 110 }} />
+        </div>
+        <div className="field">
+          <label>Restriction notice (shown in red)</label>
+          <textarea value={form.restrictionNote} onChange={set('restrictionNote')} style={{ minHeight: 60 }} />
+          <span className="hint">E.g. not offered in jurisdictions where the items are restricted.</span>
         </div>
       </div>
 

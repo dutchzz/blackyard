@@ -60,6 +60,13 @@ export default function PaymentModal({ product, onClose }) {
 
               <ol className="steps">{instructions.split('\n').map((s) => s.trim()).filter(Boolean).map((s, i) => <li key={i}>{s}</li>)}</ol>
 
+              {config?.fulfillmentNote && (
+                <p className="legal" style={{ marginTop: 16 }}>
+                  <strong>Good to know: </strong>
+                  {config.fulfillmentNote}
+                </p>
+              )}
+
               <button type="button" className="btn btn-primary btn-block" onClick={() => setStep('unlock')}>
                 I&apos;ve paid — get my code
               </button>

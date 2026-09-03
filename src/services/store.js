@@ -44,6 +44,39 @@ export const DEFAULT_CONFIG = {
     'LEGAL NOTICE: All files are for lawful use only. By browsing or downloading you confirm you are 18 or older and that possessing, printing, and using these files is legal in your jurisdiction. You are responsible for complying with all applicable local, state, and federal laws.',
   legalText:
     'All files are for legal use only. By downloading you confirm that you are 18 or older and that possessing, printing, and using these files is lawful in your jurisdiction. You are solely responsible for compliance with all applicable local, state, and federal laws.',
+  restrictionNote:
+    'Not offered in jurisdictions where these items are regulated or restricted. You are responsible for knowing and following the law where you live.',
+  fulfillmentNote:
+    'Paid downloads: your unlock code is sent within 24 hours after your CashApp payment is verified.',
+  aboutTitle: 'About BLACKYARD REPO',
+  aboutText:
+    'BLACKYARD REPO is a small, curated open catalog of STL files for legal 3D-printed components. Most files are free to download. Files are added in versions, so check back and follow along as the catalog grows.',
+  faq: [
+    {
+      q: 'Are the files free?',
+      a: 'Most of the catalog is free to download. Any paid files are under a simple CashApp purchase and are clearly marked.',
+    },
+    {
+      q: 'How do I download a file?',
+      a: 'Click any file card to open it, then hit Download. Free files download straight away.',
+    },
+    {
+      q: 'How do paid files work?',
+      a: 'Paid files are bought via CashApp. After your payment is verified you receive an unlock code, which you enter on the product page to reveal the download.',
+    },
+    {
+      q: 'Can I remix or share these files?',
+      a: 'Check the license terms below. In general, files are for personal, lawful use; ask before redistributing a remix based on someone else\u2019s work.',
+    },
+    {
+      q: 'Is this legal?',
+      a: 'We only offer files for lawful components. By using the site you confirm you are 18+ and comply with all applicable laws in your jurisdiction.',
+    },
+  ],
+  licenseText:
+    'Unless stated on a specific product, files on this store are offered for personal, lawful use. You may download, print, and modify files for your own use. Do not resell the files themselves or redistribute them without permission. If a file credits another designer or pack (for example FOSSCANNON), you must respect that original creator\u2019s license before sharing any derivative work.',
+  updatesBlurb:
+    'New files drop regularly. Leave your email to get notified when the catalog updates. No spam, unsubscribe anytime.',
   footerText: '© 2026 BLACKYARD. All rights reserved.',
   vercelDeployHook: '',
   adminPasscode: 'blackyard',
@@ -106,6 +139,7 @@ export const SEED_CODES = []
 const LS_PRODUCTS = 'by_products'
 const LS_CONFIG = 'by_config'
 const LS_CODES = 'by_codes'
+const LS_SUBS = 'by_subscribers'
 
 const readLS = (key, fallback) => {
   try {
@@ -188,6 +222,24 @@ const local = {
     writeLS(LS_CODES, updated)
     return { ok: true, code: { ...match, used: true } }
   },
+  listSubscribers: async () => {
+    ensureSeeded()
+    return readLS(LS_SUBS, [])
+  },
+  addSubscriber: async (email) => {
+    ensureSeeded()
+    const list = readLS(LS_SUBS, [])
+    const lower = String(email || '').trim().toLowerCase()
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lower)) return { ok: false, error: 'Invalid email.' }
+    if (list.some((s) => s.email === lower)) return { ok: false, error: 'Already subscribed.' }
+    const entry = { id: `s_${Date.now()}`, email: lower, createdAt: Date.now() }
+    writeLS(LS_SUBS, [...list, entry])
+    return { ok: true }
+  },
+  deleteSubscriber: async (id) => {
+    ensureSeeded()
+    writeLS(LS_SUBS, readLS(LS_SUBS, []).filter((s) => s.id !== id))
+  },
 }
 
 /* =========================================================
@@ -245,6 +297,21 @@ const fb = {
     await updateDoc(d.ref, { used: true, usedAt: serverTimestamp() })
     return { ok: true, code: { id: d.id, ...d.data(), used: true } }
   },
+  listSubscribers: async () => {
+    const snap = await getDocs(collection(db, 'subscribers'))
+    return snap.docs.map((d) => ({ id: d.id, email: d.data().email, createdAt: d.data().createdAt }))
+  },
+  addSubscriber: async (email) => {
+    const lower = String(email || '').trim().toLowerCase()
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lower)) return { ok: false, error: 'Invalid email.' }
+    const existing = await getDocs(query(collection(db, 'subscribers'), where('email', '==', lower)))
+    if (!existing.empty) return { ok: false, error: 'Already subscribed.' }
+    await addDoc(collection(db, 'subscribers'), { email: lower, createdAt: serverTimestamp() })
+    return { ok: true }
+  },
+  deleteSubscriber: async (id) => {
+    await deleteDoc(doc(db, 'subscribers', id))
+  },
 }
 
 /* =========================================================
@@ -262,3 +329,6 @@ export const listCodes = active.listCodes
 export const addCode = active.addCode
 export const deleteCode = active.deleteCode
 export const redeemCode = active.redeemCode
+export const listSubscribers = active.listSubscribers
+export const addSubscriber = active.addSubscriber
+export const deleteSubscriber = active.deleteSubscriber
