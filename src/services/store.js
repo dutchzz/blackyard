@@ -45,6 +45,7 @@ export const DEFAULT_CONFIG = {
   legalText:
     'All files are for legal use only. By downloading you confirm that you are 18 or older and that possessing, printing, and using these files is lawful in your jurisdiction. You are solely responsible for compliance with all applicable local, state, and federal laws.',
   footerText: '© 2026 BLACKYARD. All rights reserved.',
+  vercelDeployHook: '',
   adminPasscode: 'blackyard',
 }
 

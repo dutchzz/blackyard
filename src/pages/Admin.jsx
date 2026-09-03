@@ -15,10 +15,34 @@ const TABS = [
 function AdminShell() {
   const { config, firebaseOn } = useStore()
   const [tab, setTab] = useState('products')
+  const [deploy, setDeploy] = useState({ busy: false, msg: '', type: '' })
 
   const logout = () => {
     sessionStorage.removeItem('by_admin')
     window.location.reload()
+  }
+
+  const triggerDeploy = async () => {
+    const hook = (config?.vercelDeployHook || '').trim()
+    if (!hook) {
+      setDeploy({ busy: false, msg: 'No deploy hook set — add it under Site settings → Deployment.', type: 'warn' })
+      return
+    }
+    setDeploy({ busy: true, msg: 'Triggering deploy…', type: 'info' })
+    try {
+      const res = await fetch(hook, { method: 'POST' })
+      if (res.ok) {
+        setDeploy({ busy: false, msg: 'Deploy started — the latest GitHub code is building now.', type: 'info' })
+      } else {
+        window.open(hook, '_blank')
+        setDeploy({ busy: false, msg: 'Opened the deploy hook in a new tab to trigger the build.', type: 'info' })
+      }
+    } catch {
+      // Browser CORS can block direct calls; opening the hook URL still triggers the deploy.
+      window.open(hook, '_blank')
+      setDeploy({ busy: false, msg: 'Opened the deploy hook in a new tab to trigger the build.', type: 'info' })
+    }
+    setTimeout(() => setDeploy((d) => ({ ...d, msg: '' })), 8000)
   }
 
   return (
@@ -32,6 +56,15 @@ function AdminShell() {
           <Link to="/" className="btn btn-ghost btn-sm">
             View site
           </Link>
+          <button
+            type="button"
+            className="btn btn-primary btn-sm"
+            onClick={triggerDeploy}
+            disabled={deploy.busy}
+            title="Trigger a Vercel deploy of the latest GitHub code"
+          >
+            {deploy.busy ? 'Deploying…' : 'Deploy'}
+          </button>
           <button type="button" className="btn btn-danger btn-sm" onClick={logout}>
             Log out
           </button>
@@ -53,6 +86,11 @@ function AdminShell() {
         </aside>
 
         <main className="admin-main">
+          {deploy.msg && (
+            <div className={`banner ${deploy.type === 'warn' ? 'banner-warn' : deploy.type === 'err' ? 'banner-err' : 'banner-info'}`}>
+              {deploy.msg}
+            </div>
+          )}
           {!firebaseOn && (
             <div className="banner banner-warn">
               <strong>Demo mode.</strong> Firebase isn&apos;t configured yet, so changes are saved to this

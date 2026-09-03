@@ -21,6 +21,7 @@ export default function SettingsEditor() {
       legalWarning: config.legalWarning ?? '',
       legalText: config.legalText ?? '',
       footerText: config.footerText ?? '',
+      vercelDeployHook: config.vercelDeployHook ?? '',
       adminPasscode: config.adminPasscode ?? '',
       theme: { ...DEFAULT_CONFIG.theme, ...(config.theme || {}) },
     })
@@ -122,6 +123,19 @@ export default function SettingsEditor() {
         <div className="field">
           <label>Footer text</label>
           <input value={form.footerText} onChange={set('footerText')} />
+        </div>
+      </div>
+
+      <div className="card">
+        <h3>Deployment</h3>
+        <div className="field">
+          <label>Vercel deploy hook URL</label>
+          <input value={form.vercelDeployHook} onChange={set('vercelDeployHook')} placeholder="https://api.vercel.com/v1/integrations/deploy/…" />
+          <span className="hint">
+            Used by the <strong>Deploy</strong> button in the admin top bar to ship the latest GitHub code.
+            Create one in Vercel: Project → Settings → Git → Deploy Hooks → add a hook (e.g. name "admin") →
+            copy the URL here.
+          </span>
         </div>
       </div>
 
