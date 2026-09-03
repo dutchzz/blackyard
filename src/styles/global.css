@@ -867,6 +867,100 @@ h4 {
   margin-bottom: 24px;
 }
 
+/* ============ How paying works (featured card) ============ */
+.how-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.how-visual {
+  position: relative;
+  min-height: 380px;
+  background: linear-gradient(160deg, #0e1a12, #0a0a0a 70%);
+  overflow: hidden;
+}
+
+.how-visual::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(300px 240px at 15% 12%, rgba(0, 194, 68, 0.28), transparent 70%);
+  pointer-events: none;
+}
+
+.how-visual img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.how-visual-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.how-logo {
+  font-family: var(--font-display);
+  font-size: 4.6rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #06130a;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border-radius: 26px;
+  width: 108px;
+  height: 108px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 60px rgba(0, 194, 68, 0.45);
+}
+
+.how-visual-fallback .cashtag {
+  margin: 6px 0 0;
+}
+
+.how-content {
+  padding: 40px 42px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.how-content h2 {
+  font-size: clamp(1.7rem, 3.4vw, 2.3rem);
+  margin: 8px 0 6px;
+}
+
+.how-content .steps {
+  flex: 1;
+}
+
+@media (max-width: 820px) {
+  .how-card {
+    grid-template-columns: 1fr;
+  }
+  .how-visual {
+    min-height: 220px;
+    max-height: 260px;
+  }
+  .how-content {
+    padding: 28px 24px;
+  }
+}
+
 /* ============ Newsletter ============ */
 .newsletter-form {
   display: flex;

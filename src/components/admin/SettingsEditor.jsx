@@ -20,6 +20,10 @@ export default function SettingsEditor() {
       contactEmail: config.contactEmail ?? '',
       paymentInstructions: config.paymentInstructions ?? '',
       fulfillmentNote: config.fulfillmentNote ?? '',
+      howTitle: config.howTitle ?? '',
+      howSubtitle: config.howSubtitle ?? '',
+      howImage: config.howImage ?? '',
+      howButtonText: config.howButtonText ?? '',
       updatesBlurb: config.updatesBlurb ?? '',
       customTitle: config.customTitle ?? '',
       customText: config.customText ?? '',
@@ -112,6 +116,26 @@ export default function SettingsEditor() {
         <div className="field">
           <label>Fulfillment note (what buyers should expect after paying)</label>
           <textarea value={form.fulfillmentNote} onChange={set('fulfillmentNote')} style={{ minHeight: 60 }} />
+        </div>
+        <div className="field">
+          <label>"How paying works" heading</label>
+          <input value={form.howTitle} onChange={set('howTitle')} />
+        </div>
+        <div className="field">
+          <label>"How paying works" subtitle</label>
+          <input value={form.howSubtitle} onChange={set('howSubtitle')} />
+        </div>
+        <div className="field">
+          <label>"How paying works" image URL (optional)</label>
+          <input value={form.howImage} onChange={set('howImage')} placeholder="https://…" />
+          <span className="hint">
+            Shown as the section&apos;s visual panel. Leave empty to use the automatic CashApp-branded panel
+            instead. Use raw=1 links if hosted on Dropbox.
+          </span>
+        </div>
+        <div className="field">
+          <label>CashApp button text</label>
+          <input value={form.howButtonText} onChange={set('howButtonText')} />
         </div>
       </div>
 

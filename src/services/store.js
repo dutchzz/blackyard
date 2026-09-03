@@ -51,6 +51,10 @@ export const DEFAULT_CONFIG = {
     'Not offered in jurisdictions where these items are regulated or restricted. You are responsible for knowing and following the law where you live.',
   fulfillmentNote:
     'Paid downloads: your unlock code is sent within 24 hours after your CashApp payment is verified.',
+  howTitle: 'How paying works',
+  howSubtitle: 'Simple and fast \u2014 most files are free, and any paid file is quick to grab.',
+  howImage: '',
+  howButtonText: 'Pay with CashApp',
   aboutTitle: 'About BLACKYARD REPO',
   aboutText:
     'BLACKYARD REPO is a small, curated open catalog of STL files for legal 3D-printed components. Most files are free to download. Files are added in versions, so check back and follow along as the catalog grows.',
