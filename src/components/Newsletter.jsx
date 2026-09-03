@@ -60,9 +60,7 @@ export default function Newsletter() {
               </button>
             </form>
           )}
-          {status === 'error' && !msg.includes('subscribed') && (
-            <p className="error-msg">{msg}</p>
-          )}
+          {status === 'error' && <p className="error-msg">{msg}</p>}
         </div>
       </div>
     </section>
