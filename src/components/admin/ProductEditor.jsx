@@ -13,6 +13,7 @@ const blank = {
   tags: [],
   active: true,
   sortOrder: 0,
+  startDownloads: 0,
 }
 
 export default function ProductEditor() {
@@ -31,7 +32,7 @@ export default function ProductEditor() {
   }
 
   const startEdit = (p) => {
-    setForm({ ...p, price: Number(p.price) || 0 })
+    setForm({ ...p, price: Number(p.price) || 0, startDownloads: Number(p.startDownloads) || 0 })
     setTagsText((p.tags || []).join(', '))
     setImagesText(parseProductImages(p).join('\n'))
     setEditing(p)
@@ -59,6 +60,7 @@ export default function ProductEditor() {
       images,
       imageUrl: images[0] || form.imageUrl || '',
       sortOrder: Number(form.sortOrder) || 0,
+      startDownloads: Number(form.startDownloads) || 0,
     }
     await saveProduct(payload)
     setSaving(false)
@@ -157,6 +159,11 @@ export default function ProductEditor() {
             <div className="field">
               <label>File size (display)</label>
               <input value={form.filesize} onChange={set('filesize')} placeholder="e.g. 12.4 MB" />
+            </div>
+            <div className="field">
+              <label>Starting downloads</label>
+              <input type="number" min="0" value={form.startDownloads} onChange={set('startDownloads')} placeholder="e.g. 67" />
+              <span className="hint">Base count shown as social proof. Real downloads add on top.</span>
             </div>
             <div className="field">
               <label>Sort order</label>

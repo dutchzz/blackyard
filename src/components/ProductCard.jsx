@@ -8,9 +8,9 @@ export default function ProductCard({ product, onSelect }) {
   const badge = !product.active ? 'Coming soon' : isFree ? 'FREE' : `$${Number(product.price).toFixed(2)}`
   const cover = productCover(product)
 
-  // Only show the download count once it reaches the configured "starting
-  // point" so it never shows small/zero numbers before looking credible.
-  const downloads = Number(product.downloads || 0)
+  // Social proof = owner-set starting base + real downloads. Only show once it
+  // reaches the configured minimum so small/zero numbers never appear.
+  const totalDownloads = Number(product.startDownloads || 0) + Number(product.downloads || 0)
   const minDownloads = Number(config?.downloadsStart) > 0 ? Number(config.downloadsStart) : 20
 
   return (
@@ -34,9 +34,9 @@ export default function ProductCard({ product, onSelect }) {
       <div className="product-body">
         <h3>{product.name}</h3>
         {product.category && <span className="category">{product.category}</span>}
-        {downloads >= minDownloads && (
+        {totalDownloads >= minDownloads && (
           <span className="category" style={{ color: 'var(--primary)' }}>
-            {downloads} download{downloads === 1 ? '' : 's'}
+            {totalDownloads} download{totalDownloads === 1 ? '' : 's'}
           </span>
         )}
       </div>
