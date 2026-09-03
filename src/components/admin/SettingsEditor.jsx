@@ -23,6 +23,7 @@ export default function SettingsEditor() {
       updatesBlurb: config.updatesBlurb ?? '',
       customTitle: config.customTitle ?? '',
       customText: config.customText ?? '',
+      downloadsStart: config.downloadsStart ?? 20,
       aboutTitle: config.aboutTitle ?? '',
       aboutText: config.aboutText ?? '',
       licenseText: config.licenseText ?? '',
@@ -58,7 +59,7 @@ export default function SettingsEditor() {
         return { q: (q || '').trim(), a: rest.join('|').trim() }
       })
       .filter((f) => f.q && f.a)
-    await updateConfig({ ...form, faq })
+    await updateConfig({ ...form, faq, downloadsStart: Number(form.downloadsStart) || 0 })
     setSaving(false)
     setSavedMsg('Settings saved. Changes are live.')
     setTimeout(() => setSavedMsg(''), 3000)
@@ -135,6 +136,19 @@ export default function SettingsEditor() {
         <div className="field">
           <label>Custom-work text</label>
           <textarea value={form.customText} onChange={set('customText')} style={{ minHeight: 70 }} />
+        </div>
+        <div className="field">
+          <label>Show download counts only after this many</label>
+          <input
+            type="number"
+            min="1"
+            value={form.downloadsStart}
+            onChange={set('downloadsStart')}
+          />
+          <span className="hint">
+            Social-proof starting point \u2014 the &quot;N downloads&quot; label stays hidden until a file
+            reaches this number.
+          </span>
         </div>
         <div className="field">
           <label>FAQ — one per line as {"Question | Answer"}</label>

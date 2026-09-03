@@ -83,6 +83,7 @@ export const DEFAULT_CONFIG = {
   customTitle: 'Need a custom file?',
   customText:
     'Looking for something that is not in the catalog yet? I can design a custom STL file for you. Send me the details for a quote \u2014 paid securely via CashApp.',
+  downloadsStart: 20,
   footerText: '© 2026 BLACKYARD. All rights reserved.',
   vercelDeployHook: '',
   adminPasscode: 'blackyard',
