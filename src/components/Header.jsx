@@ -8,9 +8,8 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="container header-inner">
-        <Link to="/" className="brand">
-          <img className="brand-logo" src="/logo.png" alt="" />
-          {name}
+        <Link to="/" className="brand" aria-label={`${name} home`}>
+          <img className="brand-logo" src="/logo.png" alt={name} />
         </Link>
         <nav className="nav">
           <a href="#files">Files</a>

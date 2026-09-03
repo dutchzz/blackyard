@@ -34,9 +34,8 @@ export default function LoginGate({ children }) {
   return (
     <div className="login-wrap">
       <div className="login-card card">
-        <div className="brand">
-          <img className="brand-logo" src="/logo.png" alt="" style={{ width: 44, height: 44, borderRadius: 12 }} />
-          {config.storeName}
+        <div className="brand" style={{ justifyContent: 'center' }}>
+          <img className="brand-logo brand-logo-lg" src="/logo.png" alt={config.storeName} />
         </div>
         <h1>Admin</h1>
         <p>Enter your admin passcode to manage the store.</p>

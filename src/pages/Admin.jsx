@@ -53,8 +53,8 @@ function AdminShell() {
     <div className="admin-shell">
       <div className="admin-topbar">
         <div className="brand">
-          <img className="brand-logo" src="/logo.png" alt="" />
-          {config?.storeName} <span style={{ color: 'var(--muted)', fontWeight: 400 }}>/ Admin</span>
+          <img className="brand-logo" src="/logo.png" alt={config?.storeName} />
+          <span style={{ color: 'var(--muted)', fontWeight: 400 }}>/ Admin</span>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           <Link to="/" className="btn btn-ghost btn-sm">

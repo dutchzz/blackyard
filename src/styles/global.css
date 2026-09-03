@@ -138,11 +138,15 @@ h4 {
 }
 
 .brand-logo {
-  width: 30px;
   height: 30px;
-  border-radius: 8px;
-  object-fit: cover;
+  width: auto;
+  object-fit: contain;
   flex: none;
+  filter: brightness(0) invert(1);
+}
+
+.brand-logo-lg {
+  height: 46px;
 }
 
 .brand-mark {
