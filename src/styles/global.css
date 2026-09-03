@@ -142,7 +142,6 @@ h4 {
   width: auto;
   object-fit: contain;
   flex: none;
-  filter: brightness(0) invert(1);
 }
 
 .brand-logo-lg {
