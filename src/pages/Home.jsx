@@ -47,6 +47,8 @@ export default function Home() {
               </div>
             </section>
 
+            <CustomWork />
+
             <section className="section" id="how" style={{ paddingTop: 0 }}>
               <div className="container">
                 <div className="card" style={{ maxWidth: 720, margin: '0 auto' }}>
@@ -85,7 +87,6 @@ export default function Home() {
 
           <Newsletter />
           <AboutFaq />
-          <CustomWork />
           <LicenseTerms />
         </>
       )}
