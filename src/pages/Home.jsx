@@ -8,10 +8,8 @@ import ProductGrid from '../components/ProductGrid'
 import ProductModal from '../components/ProductModal'
 import PaymentModal from '../components/PaymentModal'
 import LegalNotice from '../components/LegalNotice'
-import Newsletter from '../components/Newsletter'
 import AboutFaq from '../components/AboutFaq'
 import CustomWork from '../components/CustomWork'
-import LicenseTerms from '../components/LicenseTerms'
 import { normalizeImageUrl } from '../utils/images'
 
 export default function Home() {
@@ -100,9 +98,7 @@ export default function Home() {
             </section>
           </LegalNotice>
 
-          <Newsletter />
           <AboutFaq />
-          <LicenseTerms />
         </>
       )}
 

@@ -775,6 +775,19 @@ h4 {
   color: var(--primary);
 }
 
+.footer-link {
+  display: block;
+  padding: 2px 0;
+  color: var(--muted);
+  text-align: left;
+  transition: color 0.15s;
+}
+
+.footer-link:hover {
+  color: var(--primary);
+  cursor: pointer;
+}
+
 /* ============ Admin ============ */
 .admin-shell {
   min-height: 100vh;
