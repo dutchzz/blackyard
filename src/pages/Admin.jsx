@@ -53,7 +53,7 @@ function AdminShell() {
     <div className="admin-shell">
       <div className="admin-topbar">
         <div className="brand">
-          <span className="brand-mark">B</span>
+          <img className="brand-logo" src="/logo.png" alt="" />
           {config?.storeName} <span style={{ color: 'var(--muted)', fontWeight: 400 }}>/ Admin</span>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>

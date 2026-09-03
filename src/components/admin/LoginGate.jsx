@@ -35,7 +35,7 @@ export default function LoginGate({ children }) {
     <div className="login-wrap">
       <div className="login-card card">
         <div className="brand">
-          <span className="brand-mark">B</span>
+          <img className="brand-logo" src="/logo.png" alt="" style={{ width: 44, height: 44, borderRadius: 12 }} />
           {config.storeName}
         </div>
         <h1>Admin</h1>

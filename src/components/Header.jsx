@@ -9,7 +9,7 @@ export default function Header() {
     <header className="site-header">
       <div className="container header-inner">
         <Link to="/" className="brand">
-          <span className="brand-mark">{name.charAt(0)}</span>
+          <img className="brand-logo" src="/logo.png" alt="" />
           {name}
         </Link>
         <nav className="nav">

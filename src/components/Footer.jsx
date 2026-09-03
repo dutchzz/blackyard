@@ -32,7 +32,7 @@ export default function Footer() {
       <div className="container footer-inner">
         <div className="footer-col">
           <div className="brand">
-            <span className="brand-mark">{storeName.charAt(0)}</span>
+            <img className="brand-logo" src="/logo.png" alt="" />
             {storeName}
           </div>
           <p style={{ marginTop: 8 }}>{config?.footerText}</p>
