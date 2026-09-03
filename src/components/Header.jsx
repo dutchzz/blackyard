@@ -15,7 +15,6 @@ export default function Header() {
         <nav className="nav">
           <a href="#files">Files</a>
           <a href="#how">How to pay</a>
-          <a href="#legal">Legal</a>
           <Link to="/admin" className="nav-admin">
             Admin
           </Link>
