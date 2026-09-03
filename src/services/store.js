@@ -13,6 +13,7 @@ import {
   where,
   serverTimestamp,
 } from 'firebase/firestore'
+import { isLikelyFakeEmail } from '../utils/email'
 
 /* =========================================================
    DEFAULT / SEED DATA
@@ -230,7 +231,7 @@ const local = {
     ensureSeeded()
     const list = readLS(LS_SUBS, [])
     const lower = String(email || '').trim().toLowerCase()
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lower)) return { ok: false, error: 'Invalid email.' }
+    if (isLikelyFakeEmail(lower)) return { ok: false, error: 'Please use a real email address.' }
     if (list.some((s) => s.email === lower)) return { ok: false, error: 'Already subscribed.' }
     const entry = { id: `s_${Date.now()}`, email: lower, createdAt: Date.now() }
     writeLS(LS_SUBS, [...list, entry])
@@ -303,7 +304,7 @@ const fb = {
   },
   addSubscriber: async (email) => {
     const lower = String(email || '').trim().toLowerCase()
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lower)) return { ok: false, error: 'Invalid email.' }
+    if (isLikelyFakeEmail(lower)) return { ok: false, error: 'Please use a real email address.' }
     const existing = await getDocs(query(collection(db, 'subscribers'), where('email', '==', lower)))
     if (!existing.empty) return { ok: false, error: 'Already subscribed.' }
     await addDoc(collection(db, 'subscribers'), { email: lower, createdAt: serverTimestamp() })
