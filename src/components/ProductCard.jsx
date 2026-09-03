@@ -27,6 +27,11 @@ export default function ProductCard({ product, onSelect }) {
       <div className="product-body">
         <h3>{product.name}</h3>
         {product.category && <span className="category">{product.category}</span>}
+        {Number(product.downloads || 0) > 0 && (
+          <span className="category" style={{ color: 'var(--primary)' }}>
+            {product.downloads} download{Number(product.downloads) === 1 ? '' : 's'}
+          </span>
+        )}
       </div>
     </button>
   )

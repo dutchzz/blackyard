@@ -6,12 +6,14 @@ import ProductEditor from '../components/admin/ProductEditor'
 import SettingsEditor from '../components/admin/SettingsEditor'
 import CodesManager from '../components/admin/CodesManager'
 import SubscribersManager from '../components/admin/SubscribersManager'
+import BackupManager from '../components/admin/BackupManager'
 
 const TABS = [
   { id: 'products', label: 'Products' },
   { id: 'settings', label: 'Site settings' },
   { id: 'codes', label: 'Unlock codes' },
   { id: 'subscribers', label: 'Subscribers' },
+  { id: 'backup', label: 'Backup' },
 ]
 
 function AdminShell() {
@@ -110,6 +112,7 @@ function AdminShell() {
           {tab === 'settings' && <SettingsEditor />}
           {tab === 'codes' && <CodesManager />}
           {tab === 'subscribers' && <SubscribersManager />}
+          {tab === 'backup' && <BackupManager />}
         </main>
       </div>
     </div>

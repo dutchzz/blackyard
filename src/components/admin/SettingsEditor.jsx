@@ -21,6 +21,8 @@ export default function SettingsEditor() {
       paymentInstructions: config.paymentInstructions ?? '',
       fulfillmentNote: config.fulfillmentNote ?? '',
       updatesBlurb: config.updatesBlurb ?? '',
+      customTitle: config.customTitle ?? '',
+      customText: config.customText ?? '',
       aboutTitle: config.aboutTitle ?? '',
       aboutText: config.aboutText ?? '',
       licenseText: config.licenseText ?? '',
@@ -125,6 +127,14 @@ export default function SettingsEditor() {
         <div className="field">
           <label>Updates blurb (email capture section)</label>
           <textarea value={form.updatesBlurb} onChange={set('updatesBlurb')} style={{ minHeight: 60 }} />
+        </div>
+        <div className="field">
+          <label>Custom-work heading ("Need a custom file?")</label>
+          <input value={form.customTitle} onChange={set('customTitle')} />
+        </div>
+        <div className="field">
+          <label>Custom-work text</label>
+          <textarea value={form.customText} onChange={set('customText')} style={{ minHeight: 70 }} />
         </div>
         <div className="field">
           <label>FAQ — one per line as {"Question | Answer"}</label>

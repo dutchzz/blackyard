@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useStore } from '../context/StoreContext'
 import { toDownloadUrl } from '../utils/images'
+import { incrementDownloads } from '../services/store'
 
 export default function UnlockCode({ product }) {
   const { redeem } = useStore()
@@ -54,6 +55,7 @@ export default function UnlockCode({ product }) {
                 href={toDownloadUrl(product.stlUrl)}
                 target="_blank"
                 rel="noreferrer noopener"
+                onClick={() => incrementDownloads(product.id)}
               >
                 Download {product.name}
               </a>

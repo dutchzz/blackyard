@@ -12,6 +12,8 @@ import {
   orderBy,
   where,
   serverTimestamp,
+  increment,
+  writeBatch,
 } from 'firebase/firestore'
 import { isLikelyFakeEmail } from '../utils/email'
 
@@ -78,6 +80,9 @@ export const DEFAULT_CONFIG = {
     'Unless stated on a specific product, files on this store are offered for personal, lawful use. You may download, print, and modify files for your own use. Do not resell the files themselves or redistribute them without permission. If a file credits another designer or pack (for example FOSSCANNON), you must respect that original creator\u2019s license before sharing any derivative work.',
   updatesBlurb:
     'New files drop regularly. Leave your email to get notified when the catalog updates. No spam, unsubscribe anytime.',
+  customTitle: 'Need a custom file?',
+  customText:
+    'Looking for something that is not in the catalog yet? I can design a custom STL file for you. Send me the details for a quote \u2014 paid securely via CashApp.',
   footerText: '© 2026 BLACKYARD. All rights reserved.',
   vercelDeployHook: '',
   adminPasscode: 'blackyard',
@@ -241,6 +246,27 @@ const local = {
     ensureSeeded()
     writeLS(LS_SUBS, readLS(LS_SUBS, []).filter((s) => s.id !== id))
   },
+  incrementDownloads: async (id) => {
+    ensureSeeded()
+    const list = readLS(LS_PRODUCTS, SEED_PRODUCTS).map((p) =>
+      p.id === id ? { ...p, downloads: (Number(p.downloads) || 0) + 1 } : p,
+    )
+    writeLS(LS_PRODUCTS, list)
+  },
+  exportAll: async () => ({
+    config: await local.getSiteConfig(),
+    products: await local.listProducts(),
+    codes: await local.listCodes(),
+    subscribers: await local.listSubscribers(),
+  }),
+  importAll: async (data) => {
+    ensureSeeded()
+    if (data && data.config) writeLS(LS_CONFIG, { ...DEFAULT_CONFIG, ...data.config })
+    writeLS(LS_PRODUCTS, Array.isArray(data?.products) ? data.products : [])
+    writeLS(LS_CODES, Array.isArray(data?.codes) ? data.codes : [])
+    writeLS(LS_SUBS, Array.isArray(data?.subscribers) ? data.subscribers : [])
+    return { ok: true }
+  },
 }
 
 /* =========================================================
@@ -313,6 +339,35 @@ const fb = {
   deleteSubscriber: async (id) => {
     await deleteDoc(doc(db, 'subscribers', id))
   },
+  incrementDownloads: async (id) => {
+    await updateDoc(doc(db, 'products', id), { downloads: increment(1) })
+  },
+  exportAll: async () => ({
+    config: await fb.getSiteConfig(),
+    products: await fb.listProducts(),
+    codes: await fb.listCodes(),
+    subscribers: await fb.listSubscribers(),
+  }),
+  importAll: async (data) => {
+    const batch = writeBatch(db)
+    const replace = async (col, items) => {
+      const snap = await getDocs(collection(db, col))
+      snap.docs.forEach((d) => batch.delete(d.ref))
+      ;(Array.isArray(items) ? items : []).forEach((item) => {
+        const { id, ...rest } = item
+        const ref = id ? doc(db, col, id) : doc(collection(db, col))
+        batch.set(ref, rest)
+      })
+    }
+    if (data && data.config) {
+      await fb.saveSiteConfig({ ...DEFAULT_CONFIG, ...data.config })
+    }
+    await replace('products', data?.products)
+    await replace('codes', data?.codes)
+    await replace('subscribers', data?.subscribers)
+    await batch.commit()
+    return { ok: true }
+  },
 }
 
 /* =========================================================
@@ -333,3 +388,6 @@ export const redeemCode = active.redeemCode
 export const listSubscribers = active.listSubscribers
 export const addSubscriber = active.addSubscriber
 export const deleteSubscriber = active.deleteSubscriber
+export const incrementDownloads = active.incrementDownloads
+export const exportAll = active.exportAll
+export const importAll = active.importAll

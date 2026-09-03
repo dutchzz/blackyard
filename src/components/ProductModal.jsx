@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useStore } from '../context/StoreContext'
 import { parseProductImages, toDownloadUrl } from '../utils/images'
-import { addSubscriber } from '../services/store'
+import { addSubscriber, incrementDownloads } from '../services/store'
 
 export default function ProductModal({ product, onClose, onBuy }) {
   const { config } = useStore()
@@ -137,6 +137,7 @@ export default function ProductModal({ product, onClose, onBuy }) {
                     href={toDownloadUrl(product.stlUrl)}
                     target="_blank"
                     rel="noreferrer noopener"
+                    onClick={() => incrementDownloads(product.id)}
                   >
                     Download free
                   </a>

@@ -10,6 +10,7 @@ import PaymentModal from '../components/PaymentModal'
 import LegalNotice from '../components/LegalNotice'
 import Newsletter from '../components/Newsletter'
 import AboutFaq from '../components/AboutFaq'
+import CustomWork from '../components/CustomWork'
 import LicenseTerms from '../components/LicenseTerms'
 
 export default function Home() {
@@ -84,6 +85,7 @@ export default function Home() {
 
           <Newsletter />
           <AboutFaq />
+          <CustomWork />
           <LicenseTerms />
         </>
       )}
