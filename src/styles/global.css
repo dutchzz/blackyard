@@ -1188,6 +1188,32 @@ h4 {
   font-size: 0.93rem;
 }
 
+.drag-handle {
+  cursor: grab;
+  color: var(--muted);
+  margin-right: 6px;
+  user-select: none;
+  font-size: 0.9rem;
+}
+
+.reorder-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 0.7rem;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+
+.reorder-btn:hover:not(:disabled) {
+  color: var(--primary);
+}
+
+.reorder-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
 /* ============ Admin forms / tables ============ */
 .form-grid {
   display: grid;

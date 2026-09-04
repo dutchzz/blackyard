@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useStore } from '../../context/StoreContext'
 import { parseProductImages } from '../../utils/images'
 
@@ -26,6 +26,17 @@ export default function ProductEditor() {
   const [tagsText, setTagsText] = useState('')
   const [imagesText, setImagesText] = useState('')
   const [saving, setSaving] = useState(false)
+  const [orderIds, setOrderIds] = useState(() => products.map((p) => p.id))
+  const [dragIdx, setDragIdx] = useState(null)
+
+  const idSig = products
+    .map((p) => p.id)
+    .sort()
+    .join('|')
+
+  useEffect(() => {
+    setOrderIds(products.map((p) => p.id))
+  }, [idSig])
 
   const startNew = () => {
     setForm({ ...blank, sortOrder: products.length })
@@ -87,6 +98,27 @@ export default function ProductEditor() {
     }
   }
 
+  const ordered = orderIds
+    .map((id) => products.find((p) => p.id === id))
+    .filter(Boolean)
+
+  const moveProduct = (from, to) => {
+    if (to < 0 || to >= orderIds.length || from === to) return
+    const next = [...orderIds]
+    const [moved] = next.splice(from, 1)
+    next.splice(to, 0, moved)
+    setOrderIds(next)
+
+    const byId = {}
+    products.forEach((p) => {
+      byId[p.id] = p
+    })
+    next.forEach((id, i) => {
+      const p = byId[id]
+      if (p && Number(p.sortOrder) !== i) saveProduct({ ...p, sortOrder: i })
+    })
+  }
+
   /* ---------- List view ---------- */
   if (editing === null) {
     return (
@@ -104,9 +136,13 @@ export default function ProductEditor() {
           </div>
         ) : (
           <div className="card" style={{ padding: '8px 16px', overflowX: 'auto' }}>
+            <p className="section-sub" style={{ fontSize: '0.82rem', margin: '10px 4px 12px' }}>
+              Drag rows, or use the arrows, to set the order files appear on the store.
+            </p>
             <table className="table">
               <thead>
                 <tr>
+                  <th style={{ width: 70 }}>Order</th>
                   <th>Name</th>
                   <th>Category</th>
                   <th>Price</th>
@@ -115,8 +151,42 @@ export default function ProductEditor() {
                 </tr>
               </thead>
               <tbody>
-                {products.map((p) => (
-                  <tr key={p.id}>
+                {ordered.map((p, i) => (
+                  <tr
+                    key={p.id}
+                    draggable
+                    onDragStart={() => setDragIdx(i)}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={() => {
+                      if (dragIdx != null && dragIdx !== i) moveProduct(dragIdx, i)
+                      setDragIdx(null)
+                    }}
+                    onDragEnd={() => setDragIdx(null)}
+                    style={{ cursor: dragIdx === i ? 'grabbing' : 'grab' }}
+                  >
+                    <td style={{ whiteSpace: 'nowrap' }}>
+                      <span className="drag-handle" title="Drag to reorder">
+                        ⠿
+                      </span>
+                      <button
+                        type="button"
+                        className="reorder-btn"
+                        onClick={() => moveProduct(i, i - 1)}
+                        disabled={i === 0}
+                        aria-label="Move up"
+                      >
+                        ▲
+                      </button>
+                      <button
+                        type="button"
+                        className="reorder-btn"
+                        onClick={() => moveProduct(i, i + 1)}
+                        disabled={i === ordered.length - 1}
+                        aria-label="Move down"
+                      >
+                        ▼
+                      </button>
+                    </td>
                     <td>{p.name}</td>
                     <td>{p.category || '—'}</td>
                     <td>{Number(p.price) === 0 ? 'FREE' : `$${Number(p.price).toFixed(2)}`}</td>
