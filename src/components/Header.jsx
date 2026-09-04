@@ -32,8 +32,6 @@ export default function Header() {
         </Link>
         <div className="header-right">
           <nav className="nav">
-            <a href="#files">Files</a>
-            <a href="#how">How to pay</a>
             <Link to="/admin" className="nav-admin">
               Admin
             </Link>

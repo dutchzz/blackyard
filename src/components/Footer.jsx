@@ -46,6 +46,12 @@ export default function Footer() {
         </div>
         <div className="footer-col">
           <h4>Links</h4>
+          <a href="#files" className="footer-link">
+            Files
+          </a>
+          <a href="#how" className="footer-link">
+            How to pay
+          </a>
           <button
             type="button"
             className="footer-link"
