@@ -32,6 +32,7 @@ export default function SettingsEditor() {
       aboutText: config.aboutText ?? '',
       licenseText: config.licenseText ?? '',
       restrictionNote: config.restrictionNote ?? '',
+      frameNotice: config.frameNotice ?? '',
       legalWarning: config.legalWarning ?? '',
       legalText: config.legalText ?? '',
       footerText: config.footerText ?? '',
@@ -191,6 +192,11 @@ export default function SettingsEditor() {
           <label>Restriction notice (shown in red)</label>
           <textarea value={form.restrictionNote} onChange={set('restrictionNote')} style={{ minHeight: 60 }} />
           <span className="hint">E.g. not offered in jurisdictions where the items are restricted.</span>
+        </div>
+        <div className="field">
+          <label>Frame/receiver notice (shown on frame &amp; lower products)</label>
+          <textarea value={form.frameNotice} onChange={set('frameNotice')} style={{ minHeight: 70 }} />
+          <span className="hint">Shown inside the file popup for anything categorized as a frame, lower, or receiver.</span>
         </div>
       </div>
 

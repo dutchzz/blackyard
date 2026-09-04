@@ -49,6 +49,8 @@ export const DEFAULT_CONFIG = {
     'All files are for legal use only. By downloading you confirm that you are 18 or older and that possessing, printing, and using these files is lawful in your jurisdiction. You are solely responsible for compliance with all applicable local, state, and federal laws.',
   restrictionNote:
     'Not offered in jurisdictions where these items are regulated or restricted. You are responsible for knowing and following the law where you live.',
+  frameNotice:
+    'Frame / receiver files are not offered in jurisdictions where they are regulated or restricted (for example California or Washington). By downloading you confirm you are 18 or older and that possession and use are lawful where you live.',
   fulfillmentNote:
     'Paid downloads: your unlock code is sent within 24 hours after your CashApp payment is verified.',
   howTitle: 'How paying works',

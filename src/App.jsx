@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
 import Home from './pages/Home'
 
 const Admin = lazy(() => import('./pages/Admin'))
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="*" element={<Home />} />
         </Routes>
       </Suspense>
+      <Analytics />
     </>
   )
 }

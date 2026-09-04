@@ -10,6 +10,7 @@ export default function Footer() {
   const storeName = config?.storeName || 'BLACKYARD'
   const contactEmail = config?.contactEmail || ''
   const cashtag = config?.cashtag || '$CashApp'
+  const cashLink = `https://cash.app/${cashtag.replace(/^\$/, '')}`
 
   const openModal = (which) => {
     // Hover or click both open; clicking the open one closes it.
@@ -38,6 +39,9 @@ export default function Footer() {
         <div className="footer-col">
           <h4>Payments</h4>
           <p>CashApp · {cashtag}</p>
+          <a href={cashLink} target="_blank" rel="noreferrer noopener">
+            Support with a tip
+          </a>
         </div>
         <div className="footer-col">
           <h4>Contact</h4>

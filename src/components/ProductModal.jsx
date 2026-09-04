@@ -28,6 +28,9 @@ export default function ProductModal({ product, onClose, onBuy }) {
   const isFree = !product.price || Number(product.price) === 0
   const current = images[Math.min(idx, Math.max(images.length - 1, 0))]
   const emailUnlocked = gate.done || localStorage.getItem('by_email_ok') === '1'
+  const cashtag = config?.cashtag || '$CashApp'
+  const cashLink = `https://cash.app/${cashtag.replace(/^\$/, '')}`
+  const isFrame = /frame|lower|receiver/i.test(product.category || '')
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault()
@@ -125,6 +128,14 @@ export default function ProductModal({ product, onClose, onBuy }) {
           {product.description && <p className="pm-desc">{product.description}</p>}
 
           <div className="pm-actions">
+            {isFrame && config?.frameNotice && (
+              <div
+                className="legal"
+                style={{ margin: '0 0 12px', padding: '12px 14px', borderLeftColor: 'var(--danger)', fontSize: '0.8rem' }}
+              >
+                {config.frameNotice}
+              </div>
+            )}
             {!product.active ? (
               <span className="btn btn-ghost btn-block" aria-disabled>
                 Coming soon
@@ -186,6 +197,18 @@ export default function ProductModal({ product, onClose, onBuy }) {
                   {config.contactEmail}
                 </a>
               </p>
+            )}
+
+            {isFree && (
+              <a
+                className="btn btn-ghost"
+                href={cashLink}
+                target="_blank"
+                rel="noreferrer noopener"
+                style={{ fontSize: '0.85rem' }}
+              >
+                Like it? Support with a tip · {cashtag}
+              </a>
             )}
           </div>
         </div>
