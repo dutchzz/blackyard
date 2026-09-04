@@ -13,8 +13,10 @@ export default function Footer() {
   const cashLink = `https://cash.app/${cashtag.replace(/^\$/, '')}`
 
   const openModal = (which) => {
-    // Hover or click both open; clicking the open one closes it.
-    setModal((m) => (m === which ? null : which))
+    // Hover or click both open. Closing happens via the ×, the overlay, or
+    // Escape — never by clicking the opener again (a mobile tap fires
+    // mouseenter THEN click, which used to toggle the modal shut instantly).
+    setModal(which)
   }
 
   useEffect(() => {

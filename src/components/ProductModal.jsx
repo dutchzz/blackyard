@@ -1,18 +1,20 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useStore } from '../context/StoreContext'
 import { parseProductImages, toDownloadUrl } from '../utils/images'
-import { addSubscriber, incrementDownloads } from '../services/store'
+import { addSubscriber, addReport, incrementDownloads } from '../services/store'
 
 export default function ProductModal({ product, onClose, onBuy }) {
   const { config } = useStore()
   const [idx, setIdx] = useState(0)
   const [gate, setGate] = useState({ show: false, email: '', busy: false, done: false, error: '' })
+  const [report, setReport] = useState({ show: false, note: '', contact: '', busy: false, done: false, error: '' })
 
   const images = useMemo(() => parseProductImages(product), [product])
 
   useEffect(() => {
     setIdx(0)
     setGate({ show: false, email: '', busy: false, done: false, error: '' })
+    setReport({ show: false, note: '', contact: '', busy: false, done: false, error: '' })
   }, [product.id])
 
   useEffect(() => {
@@ -49,6 +51,22 @@ export default function ProductModal({ product, onClose, onBuy }) {
       }
     } catch {
       setGate((g) => ({ ...g, busy: false, error: 'Something went wrong. Please try again.' }))
+    }
+  }
+
+  const submitReport = async (e) => {
+    e.preventDefault()
+    setReport((r) => ({ ...r, busy: true, error: '' }))
+    try {
+      await addReport({
+        productId: product.id,
+        productName: product.name,
+        note: report.note,
+        contact: report.contact,
+      })
+      setReport((r) => ({ ...r, busy: false, done: true }))
+    } catch {
+      setReport((r) => ({ ...r, busy: false, error: 'Could not send. Please email us instead.' }))
     }
   }
 
@@ -246,14 +264,43 @@ export default function ProductModal({ product, onClose, onBuy }) {
               </a>
             )}
 
-            {config?.contactEmail && (
-              <a
+            {report.done ? (
+              <p
+                className="section-sub"
+                style={{ textAlign: 'center', fontSize: '0.82rem', color: 'var(--primary)', marginBottom: 0 }}
+              >
+                Thanks — your report was sent.
+              </p>
+            ) : report.show ? (
+              <form className="report-form" onSubmit={submitReport} style={{ margin: '4px 0 0' }}>
+                <textarea
+                  rows={2}
+                  value={report.note}
+                  onChange={(e) => setReport((r) => ({ ...r, note: e.target.value, error: '' }))}
+                  placeholder="What's wrong? e.g. broken download link"
+                  required
+                />
+                <input
+                  type="email"
+                  value={report.contact}
+                  onChange={(e) => setReport((r) => ({ ...r, contact: e.target.value }))}
+                  placeholder="Your email (optional — only if you want a reply)"
+                  autoComplete="email"
+                />
+                <button type="submit" className="btn btn-primary btn-block" disabled={report.busy}>
+                  {report.busy ? 'Sending…' : 'Send report'}
+                </button>
+                {report.error && <p className="error-msg">{report.error}</p>}
+              </form>
+            ) : (
+              <button
+                type="button"
                 className="btn btn-ghost"
-                href={`mailto:${config.contactEmail}?subject=${encodeURIComponent('Issue with: ' + product.name)}`}
                 style={{ fontSize: '0.8rem', color: 'var(--muted)' }}
+                onClick={() => setReport((r) => ({ ...r, show: true }))}
               >
                 Report a problem with this file
-              </a>
+              </button>
             )}
           </div>
         </div>

@@ -802,6 +802,27 @@ h4 {
   margin-top: 10px;
 }
 
+.report-form textarea,
+.report-form input {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  transition: border-color 0.15s;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.92rem;
+  resize: vertical;
+}
+
+.report-form textarea:focus,
+.report-form input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
 .success-box {
   margin-top: 14px;
   padding: 16px;

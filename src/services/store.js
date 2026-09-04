@@ -157,6 +157,7 @@ const LS_PRODUCTS = 'by_products'
 const LS_CONFIG = 'by_config'
 const LS_CODES = 'by_codes'
 const LS_SUBS = 'by_subscribers'
+const LS_REPORTS = 'by_reports'
 
 const readLS = (key, fallback) => {
   try {
@@ -257,6 +258,37 @@ const local = {
     ensureSeeded()
     writeLS(LS_SUBS, readLS(LS_SUBS, []).filter((s) => s.id !== id))
   },
+  listReports: async () => {
+    ensureSeeded()
+    return readLS(LS_REPORTS, [])
+  },
+  addReport: async (report) => {
+    ensureSeeded()
+    const list = readLS(LS_REPORTS, [])
+    const id = report.id || `r_${Date.now()}`
+    const entry = {
+      id,
+      productId: report.productId || '',
+      productName: report.productName || '',
+      note: report.note || '',
+      contact: report.contact || '',
+      status: report.status || 'open',
+      createdAt: report.createdAt || Date.now(),
+    }
+    writeLS(LS_REPORTS, [entry, ...list])
+    return { ok: true }
+  },
+  deleteReport: async (id) => {
+    ensureSeeded()
+    writeLS(LS_REPORTS, readLS(LS_REPORTS, []).filter((r) => r.id !== id))
+  },
+  setReportStatus: async (id, status) => {
+    ensureSeeded()
+    writeLS(
+      LS_REPORTS,
+      readLS(LS_REPORTS, []).map((r) => (r.id === id ? { ...r, status } : r)),
+    )
+  },
   incrementDownloads: async (id) => {
     ensureSeeded()
     const list = readLS(LS_PRODUCTS, SEED_PRODUCTS).map((p) =>
@@ -269,6 +301,7 @@ const local = {
     products: await local.listProducts(),
     codes: await local.listCodes(),
     subscribers: await local.listSubscribers(),
+    reports: await local.listReports(),
   }),
   importAll: async (data) => {
     ensureSeeded()
@@ -276,6 +309,7 @@ const local = {
     writeLS(LS_PRODUCTS, Array.isArray(data?.products) ? data.products : [])
     writeLS(LS_CODES, Array.isArray(data?.codes) ? data.codes : [])
     writeLS(LS_SUBS, Array.isArray(data?.subscribers) ? data.subscribers : [])
+    if (Array.isArray(data?.reports)) writeLS(LS_REPORTS, data.reports)
     return { ok: true }
   },
 }
@@ -350,6 +384,28 @@ const fb = {
   deleteSubscriber: async (id) => {
     await deleteDoc(doc(db, 'subscribers', id))
   },
+  listReports: async () => {
+    const q = query(collection(db, 'reports'), orderBy('createdAt', 'desc'))
+    const snap = await getDocs(q)
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+  },
+  addReport: async (report) => {
+    await addDoc(collection(db, 'reports'), {
+      productId: report.productId || '',
+      productName: report.productName || '',
+      note: report.note || '',
+      contact: report.contact || '',
+      status: 'open',
+      createdAt: serverTimestamp(),
+    })
+    return { ok: true }
+  },
+  deleteReport: async (id) => {
+    await deleteDoc(doc(db, 'reports', id))
+  },
+  setReportStatus: async (id, status) => {
+    await updateDoc(doc(db, 'reports', id), { status })
+  },
   incrementDownloads: async (id) => {
     await updateDoc(doc(db, 'products', id), { downloads: increment(1) })
   },
@@ -358,6 +414,7 @@ const fb = {
     products: await fb.listProducts(),
     codes: await fb.listCodes(),
     subscribers: await fb.listSubscribers(),
+    reports: await fb.listReports(),
   }),
   importAll: async (data) => {
     const batch = writeBatch(db)
@@ -376,6 +433,7 @@ const fb = {
     await replace('products', data?.products)
     await replace('codes', data?.codes)
     await replace('subscribers', data?.subscribers)
+    await replace('reports', data?.reports)
     await batch.commit()
     return { ok: true }
   },
@@ -399,6 +457,10 @@ export const redeemCode = active.redeemCode
 export const listSubscribers = active.listSubscribers
 export const addSubscriber = active.addSubscriber
 export const deleteSubscriber = active.deleteSubscriber
+export const listReports = active.listReports
+export const addReport = active.addReport
+export const deleteReport = active.deleteReport
+export const setReportStatus = active.setReportStatus
 export const incrementDownloads = active.incrementDownloads
 export const exportAll = active.exportAll
 export const importAll = active.importAll

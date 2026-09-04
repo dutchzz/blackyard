@@ -6,6 +6,7 @@ import ProductEditor from '../components/admin/ProductEditor'
 import SettingsEditor from '../components/admin/SettingsEditor'
 import CodesManager from '../components/admin/CodesManager'
 import SubscribersManager from '../components/admin/SubscribersManager'
+import ReportsManager from '../components/admin/ReportsManager'
 import BackupManager from '../components/admin/BackupManager'
 
 const TABS = [
@@ -13,6 +14,7 @@ const TABS = [
   { id: 'settings', label: 'Site settings' },
   { id: 'codes', label: 'Unlock codes' },
   { id: 'subscribers', label: 'Subscribers' },
+  { id: 'reports', label: 'Reports' },
   { id: 'backup', label: 'Backup' },
 ]
 
@@ -112,6 +114,7 @@ function AdminShell() {
           {tab === 'settings' && <SettingsEditor />}
           {tab === 'codes' && <CodesManager />}
           {tab === 'subscribers' && <SubscribersManager />}
+          {tab === 'reports' && <ReportsManager />}
           {tab === 'backup' && <BackupManager />}
         </main>
       </div>
