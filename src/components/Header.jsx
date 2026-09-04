@@ -30,14 +30,16 @@ export default function Header() {
         <Link to="/" className="brand" aria-label={`${name} home`}>
           <img className="brand-logo" src="/logo.png" alt={name} />
         </Link>
-        <nav className="nav">
+        <div className="header-right">
+          <nav className="nav">
+            <a href="#files">Files</a>
+            <a href="#how">How to pay</a>
+            <Link to="/admin" className="nav-admin">
+              Admin
+            </Link>
+          </nav>
           <Clock />
-          <a href="#files">Files</a>
-          <a href="#how">How to pay</a>
-          <Link to="/admin" className="nav-admin">
-            Admin
-          </Link>
-        </nav>
+        </div>
       </div>
     </header>
   )
