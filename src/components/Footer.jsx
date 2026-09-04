@@ -34,7 +34,6 @@ export default function Footer() {
           <div className="brand">
             <img className="brand-logo brand-logo-lg" src="/logo.png" alt={storeName} />
           </div>
-          <p style={{ marginTop: 8 }}>{config?.footerText}</p>
         </div>
         <div className="footer-col">
           <h4>Payments</h4>
@@ -44,35 +43,38 @@ export default function Footer() {
           <h4>Contact</h4>
           {contactEmail && <a href={`mailto:${contactEmail}`}>{contactEmail}</a>}
         </div>
-        <div className="footer-col">
+        <div className="footer-col footer-col-links">
           <h4>Links</h4>
-          <a href="#files" className="footer-link">
-            Files
-          </a>
-          <a href="#how" className="footer-link">
-            How to pay
-          </a>
-          <button
-            type="button"
-            className="footer-link"
-            onMouseEnter={() => openModal('updates')}
-            onClick={() => openModal('updates')}
-          >
-            Updates
-          </button>
-          <button
-            type="button"
-            className="footer-link"
-            onMouseEnter={() => openModal('terms')}
-            onClick={() => openModal('terms')}
-          >
-            Terms &amp; use
-          </button>
-          <Link to="/admin" className="footer-link">
-            Admin
-          </Link>
+          <div className="footer-links-rows">
+            <span className="footer-links-row">
+              <a href="#files">Files</a>
+              <span className="dot">·</span>
+              <a href="#how">How to pay</a>
+              <span className="dot">·</span>
+              <button
+                type="button"
+                onMouseEnter={() => openModal('updates')}
+                onClick={() => openModal('updates')}
+              >
+                Updates
+              </button>
+            </span>
+            <span className="footer-links-row">
+              <button
+                type="button"
+                onMouseEnter={() => openModal('terms')}
+                onClick={() => openModal('terms')}
+              >
+                Terms &amp; use
+              </button>
+              <span className="dot">·</span>
+              <Link to="/admin">Admin</Link>
+            </span>
+          </div>
         </div>
       </div>
+
+      <div className="container footer-bottom">{config?.footerText}</div>
 
       {modal && (
         <div className="modal-overlay" onClick={() => setModal(null)}>
