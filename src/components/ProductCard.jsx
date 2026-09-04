@@ -13,6 +13,11 @@ export default function ProductCard({ product, onSelect }) {
   const totalDownloads = Number(product.startDownloads || 0) + Number(product.downloads || 0)
   const minDownloads = Number(config?.downloadsStart) > 0 ? Number(config.downloadsStart) : 20
 
+  const updatedLabel =
+    product.updatedAt && !Number.isNaN(Number(product.updatedAt))
+      ? new Date(Number(product.updatedAt)).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+      : ''
+
   return (
     <button
       type="button"
@@ -29,11 +34,22 @@ export default function ProductCard({ product, onSelect }) {
         <span className={`badge ${!product.active ? 'badge-hidden' : isFree ? 'badge-free' : 'badge-paid'}`}>
           {badge}
         </span>
+        {product.flag === 'new' && (
+          <span className="badge badge-new" style={{ left: 'auto', right: 12 }}>
+            NEW
+          </span>
+        )}
       </div>
 
       <div className="product-body">
         <h3>{product.name}</h3>
         {product.category && <span className="category">{product.category}</span>}
+        {(product.version || updatedLabel) && (
+          <span className="product-tags">
+            {product.version && <span className="tag tag-accent">{product.version}</span>}
+            {updatedLabel && <span className="tag">Updated {updatedLabel}</span>}
+          </span>
+        )}
         {totalDownloads >= minDownloads && (
           <span className="category" style={{ color: 'var(--primary)' }}>
             {totalDownloads} download{totalDownloads === 1 ? '' : 's'}

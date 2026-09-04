@@ -31,6 +31,10 @@ export default function ProductModal({ product, onClose, onBuy }) {
   const cashtag = config?.cashtag || '$CashApp'
   const cashLink = `https://cash.app/${cashtag.replace(/^\$/, '')}`
   const isFrame = /frame|lower|receiver/i.test(product.category || '')
+  const updatedLabel =
+    product.updatedAt && !Number.isNaN(Number(product.updatedAt))
+      ? new Date(Number(product.updatedAt)).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+      : ''
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault()
@@ -127,6 +131,37 @@ export default function ProductModal({ product, onClose, onBuy }) {
           )}
           {product.description && <p className="pm-desc">{product.description}</p>}
 
+          {(product.version || updatedLabel) && (
+            <div className="pm-meta" style={{ marginTop: -6, marginBottom: 12 }}>
+              {product.version && <span className="tag tag-accent">{product.version}</span>}
+              {updatedLabel && <span className="tag">Updated {updatedLabel}</span>}
+            </div>
+          )}
+
+          {product.printNotes && (
+            <div
+              style={{
+                padding: '12px 14px',
+                background: 'var(--surface-2)',
+                border: '1px solid var(--border)',
+                borderRadius: 12,
+                marginBottom: 14,
+                fontSize: '0.88rem',
+              }}
+            >
+              <strong style={{ fontSize: '0.8rem', letterSpacing: '0.04em', textTransform: 'uppercase', color: 'var(--primary)' }}>
+                Print notes
+              </strong>
+              <p style={{ marginTop: 6, color: 'var(--muted)', whiteSpace: 'pre-line' }}>{product.printNotes}</p>
+            </div>
+          )}
+
+          {config?.printDisclaimer && (
+            <p className="section-sub" style={{ fontSize: '0.78rem', margin: '0 0 16px' }}>
+              {config.printDisclaimer}
+            </p>
+          )}
+
           <div className="pm-actions">
             {isFrame && config?.frameNotice && (
               <div
@@ -208,6 +243,16 @@ export default function ProductModal({ product, onClose, onBuy }) {
                 style={{ fontSize: '0.85rem' }}
               >
                 Like it? Support with a tip · {cashtag}
+              </a>
+            )}
+
+            {config?.contactEmail && (
+              <a
+                className="btn btn-ghost"
+                href={`mailto:${config.contactEmail}?subject=${encodeURIComponent('Issue with: ' + product.name)}`}
+                style={{ fontSize: '0.8rem', color: 'var(--muted)' }}
+              >
+                Report a problem with this file
               </a>
             )}
           </div>

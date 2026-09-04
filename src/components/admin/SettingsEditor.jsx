@@ -33,6 +33,9 @@ export default function SettingsEditor() {
       licenseText: config.licenseText ?? '',
       restrictionNote: config.restrictionNote ?? '',
       frameNotice: config.frameNotice ?? '',
+      printDisclaimer: config.printDisclaimer ?? '',
+      communityLabel: config.communityLabel ?? '',
+      communityUrl: config.communityUrl ?? '',
       legalWarning: config.legalWarning ?? '',
       legalText: config.legalText ?? '',
       footerText: config.footerText ?? '',
@@ -197,6 +200,23 @@ export default function SettingsEditor() {
           <label>Frame/receiver notice (shown on frame &amp; lower products)</label>
           <textarea value={form.frameNotice} onChange={set('frameNotice')} style={{ minHeight: 70 }} />
           <span className="hint">Shown inside the file popup for anything categorized as a frame, lower, or receiver.</span>
+        </div>
+        <div className="field">
+          <label>Print disclaimer (shown on every file)</label>
+          <textarea value={form.printDisclaimer} onChange={set('printDisclaimer')} style={{ minHeight: 70 }} />
+        </div>
+      </div>
+
+      <div className="card">
+        <h3>Community</h3>
+        <div className="field">
+          <label>Community button text</label>
+          <input value={form.communityLabel} onChange={set('communityLabel')} placeholder="e.g. Join the Discord" />
+        </div>
+        <div className="field">
+          <label>Community URL (Discord / Telegram / etc.)</label>
+          <input value={form.communityUrl} onChange={set('communityUrl')} placeholder="https://discord.gg/…" />
+          <span className="hint">Shown in the footer. Leave both blank to hide the button.</span>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useStore } from '../context/StoreContext'
 import Header from '../components/Header'
 import LegalBanner from '../components/LegalBanner'
@@ -16,6 +16,28 @@ export default function Home() {
   const { config, loading } = useStore()
   const [viewing, setViewing] = useState(null)
   const [buying, setBuying] = useState(null)
+
+  // Structured data (JSON-LD) for search engines.
+  useEffect(() => {
+    const old = document.getElementById('ld-json')
+    if (old) old.remove()
+    if (!config) return
+    const org = {
+      '@context': 'https://schema.org',
+      '@type': 'Store',
+      name: config.storeName,
+      url: window.location.origin,
+      description: config.heroText || undefined,
+      email: config.contactEmail || undefined,
+      currenciesAccepted: 'USD',
+      paymentAccepted: 'CashApp',
+    }
+    const script = document.createElement('script')
+    script.type = 'application/ld+json'
+    script.id = 'ld-json'
+    script.textContent = JSON.stringify(org)
+    document.head.appendChild(script)
+  }, [config])
 
   const cashtag = config?.cashtag || '$CashApp'
   const cashLink = `https://cash.app/${cashtag.replace(/^\$/, '')}`

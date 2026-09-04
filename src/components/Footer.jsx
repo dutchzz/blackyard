@@ -78,7 +78,14 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="container footer-bottom">{config?.footerText}</div>
+      <div className="container footer-bottom">
+        {config?.communityUrl && (
+          <a className="footer-community" href={config.communityUrl} target="_blank" rel="noreferrer noopener">
+            {config.communityLabel || 'Join the community'} →
+          </a>
+        )}
+        <div>{config?.footerText}</div>
+      </div>
 
       {modal && (
         <div className="modal-overlay" onClick={() => setModal(null)}>

@@ -14,6 +14,9 @@ const blank = {
   active: true,
   sortOrder: 0,
   startDownloads: 0,
+  version: '',
+  flag: '',
+  printNotes: '',
 }
 
 export default function ProductEditor() {
@@ -32,7 +35,14 @@ export default function ProductEditor() {
   }
 
   const startEdit = (p) => {
-    setForm({ ...p, price: Number(p.price) || 0, startDownloads: Number(p.startDownloads) || 0 })
+    setForm({
+      ...p,
+      price: Number(p.price) || 0,
+      startDownloads: Number(p.startDownloads) || 0,
+      version: p.version || '',
+      flag: p.flag || '',
+      printNotes: p.printNotes || '',
+    })
     setTagsText((p.tags || []).join(', '))
     setImagesText(parseProductImages(p).join('\n'))
     setEditing(p)
@@ -61,6 +71,10 @@ export default function ProductEditor() {
       imageUrl: images[0] || form.imageUrl || '',
       sortOrder: Number(form.sortOrder) || 0,
       startDownloads: Number(form.startDownloads) || 0,
+      version: (form.version || '').trim(),
+      flag: form.flag || '',
+      printNotes: (form.printNotes || '').trim(),
+      updatedAt: Date.now(),
     }
     await saveProduct(payload)
     setSaving(false)
@@ -169,11 +183,35 @@ export default function ProductEditor() {
               <label>Sort order</label>
               <input type="number" value={form.sortOrder} onChange={set('sortOrder')} />
             </div>
+            <div className="field">
+              <label>Version tag</label>
+              <input value={form.version} onChange={set('version')} placeholder="e.g. V2" />
+              <span className="hint">Shown as a chip (e.g. V2) and used for the &quot;updated&quot; badge.</span>
+            </div>
+            <div className="field">
+              <label>Flag</label>
+              <select value={form.flag} onChange={set('flag')}>
+                <option value="">None</option>
+                <option value="new">New</option>
+              </select>
+              <span className="hint">&quot;New&quot; shows a small corner tag on the card.</span>
+            </div>
           </div>
 
           <div className="field">
             <label>Description</label>
             <textarea value={form.description} onChange={set('description')} />
+          </div>
+
+          <div className="field">
+            <label>Print notes (shown on the file page)</label>
+            <textarea
+              value={form.printNotes}
+              onChange={set('printNotes')}
+              placeholder={'e.g. 4 walls, 100% infill, no supports'}
+              style={{ minHeight: 70 }}
+            />
+            <span className="hint">Optional recommended print settings shown inside the file popup.</span>
           </div>
 
           <div className="form-grid">
